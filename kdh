@@ -1,0 +1,8 @@
+user.email=thanhnguyen187201@gmail.com
+user.name=nguyen187
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+remote.origin.url=https://github.com/nguyen187/yolo_platform.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
