@@ -2,7 +2,7 @@
 import json
 from azure.eventhub import EventHubProducerClient, EventData
 import time 
-event_hub_connection_string = 'Endpoint=sb://yleventhub233.servicebus.windows.net/;SharedAccessKeyName=YLpolicy;SharedAccessKey=2WVVLwPrLro1VBX+WsDAp81ptB8kaDzDq+AEhF3Dx+k=;EntityPath=yolorealtime'
+event_hub_connection_string = ''
 event_hub_name = 'yolorealtime'
 producer = EventHubProducerClient.from_connection_string(conn_str=event_hub_connection_string, eventhub_name=event_hub_name)
 # Opening JSON file
