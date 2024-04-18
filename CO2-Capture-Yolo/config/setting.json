@@ -1,7 +1,7 @@
 {
   "iou": 0.45,
-  "conf": 0.56,
-  "rate": 10,
+  "conf": 0.5,
+  "rate": 40,
   "save_res": 0,
   "save_txt": 0
 }

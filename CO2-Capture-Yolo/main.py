@@ -61,6 +61,10 @@ class YoloPredictor(BasePredictor, QObject):
         self.labels_dict = {}            # return a dictionary of results
         self.progress_value = 0          # progress bar
 
+        self.cust = 'NA'
+        self.projectid = 'NA'
+        self.batchid = 0
+
         # Usable if setup is done
         self.model = None
         self.data = self.args.data  # data_dict
@@ -249,8 +253,8 @@ class YoloPredictor(BasePredictor, QObject):
                         # send to event Hub
                         try:
                         
-                            liq_type = {'medium':2,'high':3,'low':1}
-                            reading = {'liquidity': liq_type[liquidity_values],'bubble_nums': target_nums}
+
+                            reading = {'cust':self.cust,'projectid':self.projectid,'batchid':self.batchid,'liquidity': liquidity_values,'bubble_nums': target_nums}
 
                             s = json.dumps(reading) # Convert the reading into a JSON string.
                             with open('./realtime/data.json', 'w') as f:
@@ -461,7 +465,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.conf_slider.valueChanged.connect(lambda x:self.change_val(x, 'conf_slider'))    # conf scroll bar
         self.speed_spinbox.valueChanged.connect(lambda x:self.change_val(x, 'speed_spinbox'))# speed box
         self.speed_slider.valueChanged.connect(lambda x:self.change_val(x, 'speed_slider'))  # speed scroll bar
-
         # Prompt window initialization
         self.Class_num.setText('--')
         self.Target_num.setText('--')
@@ -540,12 +543,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.yolo_predict.source == '':
             self.show_status('Please select a video source before starting detection...')
             self.run_button.setChecked(False)
-        else:
+        
+        elif self.lineEdit_cust.text() == '' or self.lineEdit_project.text() == '' or self.lineEdit_batchid.text() == '':
+            self.show_status('Please input user information before starting detection...')
+            self.run_button.setChecked(False)
+        elif not self.lineEdit_batchid.text().isnumeric():
+            self.show_status('BatchID must be numberic...')
+            self.run_button.setChecked(False)
+        else:   
             self.yolo_predict.stop_dtc = False
+            
             if self.run_button.isChecked():
                 self.run_button.setChecked(True)    # start button
                 self.save_txt_button.setEnabled(False)  # It is forbidden to check and save after starting the detection
                 self.save_res_button.setEnabled(False)
+
+                self.yolo_predict.cust = self.lineEdit_cust.text()
+                self.yolo_predict.projectid = self.lineEdit_project.text()
+                self.yolo_predict.batchid = self.lineEdit_batchid.text()
+
                 self.show_status('Detecting...')  
                 self.yolo_predict.continue_dtc = True   # Control whether Yolo is paused
                 if not self.yolo_thread.isRunning():
@@ -806,6 +822,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.speed_spinbox.setValue(x)
             self.show_status('Delay: %s ms' % str(x))
             self.yolo_predict.speed_thres = x  # ms
+
             
     # change model
     def change_model(self,x):
@@ -833,11 +850,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         pt_list = [file for file in pt_list if file.endswith('.pt')]
         # pt_list.sort(key=lambda x: os.path.getsize('./models/' + x))
         # It must be sorted before comparing, otherwise the list will be refreshed all the time
-        
+       
         if pt_list != self.pt_list:
             self.pt_list = pt_list
             self.model_box.clear()
             self.model_box.addItems(self.pt_list)
+        
+        cust_id = self.lineEdit_cust.text()
+        if cust_id != self.yolo_predict.cust:
+            self.yolo_predict.cust = cust_id
+        project_id = self.lineEdit_project.text()
+        if project_id != self.yolo_predict.projectid:
+            self.yolo_predict.projectid = project_id
+        batch_id = self.lineEdit_batchid.text()
+        if batch_id != self.yolo_predict.batchid:
+            self.yolo_predict.batchid = batch_id
         
         
 

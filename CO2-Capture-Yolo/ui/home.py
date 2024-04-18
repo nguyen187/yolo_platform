@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBo
     QFrame, QHBoxLayout, QLabel, QLayout,
     QMainWindow, QProgressBar, QPushButton, QSizePolicy,
     QSlider, QSpacerItem, QSpinBox, QSplitter,
-    QVBoxLayout, QWidget)
+    QVBoxLayout, QWidget,QLineEdit)
 import ui.resources_rc
 
 class Ui_MainWindow(object):
@@ -1041,6 +1041,7 @@ class Ui_MainWindow(object):
 "}")
         self.prm_page.setFrameShape(QFrame.StyledPanel)
         self.prm_page.setFrameShadow(QFrame.Raised)
+        
         self.verticalLayout_22 = QVBoxLayout(self.prm_page)
         self.verticalLayout_22.setSpacing(15)
         self.verticalLayout_22.setObjectName(u"verticalLayout_22")
@@ -1057,8 +1058,8 @@ class Ui_MainWindow(object):
 
         self.Model_QF_2 = QWidget(self.prm_page)
         self.Model_QF_2.setObjectName(u"Model_QF_2")
-        self.Model_QF_2.setMinimumSize(QSize(190, 90))
-        self.Model_QF_2.setMaximumSize(QSize(190, 90))
+        self.Model_QF_2.setMinimumSize(QSize(190, 80))
+        self.Model_QF_2.setMaximumSize(QSize(190, 80))
         self.Model_QF_2.setStyleSheet(u"QWidget#Model_QF_2{\n"
 "border:2px solid rgba(255, 255, 255, 70);\n"
 "border-radius:15px;\n"
@@ -1105,7 +1106,176 @@ class Ui_MainWindow(object):
         self.ToggleBotton_6.setFlat(False)
 
         self.verticalLayout_21.addWidget(self.ToggleBotton_6)
+# ================================================================= USER INFORMATION INPUT =========================================================================
+        self.Info_QF = QFrame(self.prm_page)
+        self.Info_QF.setObjectName(u"Info_QF")
+        self.Info_QF.setMinimumSize(QSize(190, 120))
+        self.Info_QF.setMaximumSize(QSize(190, 120))
+        self.Info_QF.setStyleSheet(u"QFrame#Info_QF{\n"
+"border:2px solid rgba(255, 255, 255, 70);\n"
+"border-radius:15px;\n"
+"}")
+        self.verticalLayout_200 = QVBoxLayout(self.Info_QF)
+        self.verticalLayout_200.setObjectName(u"verticalLayout_200")
+        self.verticalLayout_200.setContentsMargins(9, 9, 9, 9)
+        self.ToggleBotton_500 = QPushButton(self.Info_QF)
+        self.ToggleBotton_500.setObjectName(u"ToggleBotton_500")
+        sizePolicy1.setHeightForWidth(self.ToggleBotton_500.sizePolicy().hasHeightForWidth())
+        self.ToggleBotton_500.setSizePolicy(sizePolicy1)
+        self.ToggleBotton_500.setMinimumSize(QSize(0, 30))
+        self.ToggleBotton_500.setMaximumSize(QSize(16777215, 30))
+        self.ToggleBotton_500.setFont(font5)
+        self.ToggleBotton_500.setCursor(QCursor(Qt.ArrowCursor))
+        self.ToggleBotton_500.setMouseTracking(True)
+        self.ToggleBotton_500.setFocusPolicy(Qt.StrongFocus)
+        self.ToggleBotton_500.setContextMenuPolicy(Qt.DefaultContextMenu)
+        self.ToggleBotton_500.setLayoutDirection(Qt.LeftToRight)
+        self.ToggleBotton_500.setAutoFillBackground(False)
+        self.ToggleBotton_500.setStyleSheet(u"QPushButton{\n"
+"background-image: url(./img/profile-user.png);\n"
+"background-repeat: no-repeat;\n"
+"background-position: left center;\n"
+"border: none;\n"
+"border-left: 20px solid transparent;\n"
+"\n"
+"text-align: left;\n"
+"padding-left: 40px;\n"
+"padding-bottom: 2px;\n"
+"color: rgba(255, 255, 255, 199);\n"
+"font: 700 13pt \"Nirmala UI\";\n"
+"}")
+        self.ToggleBotton_500.setIcon(icon)
+        self.ToggleBotton_500.setAutoDefault(False)
+        self.ToggleBotton_500.setFlat(False)
 
+        self.verticalLayout_200.addWidget(self.ToggleBotton_500)
+        
+        
+                # Tạo một frame mới để chứa nhãn và ô nhập
+        self.frame_cust_info = QFrame(self.Info_QF)
+        self.frame_cust_info.setObjectName("frame_cust_info")
+        self.frame_cust_info.setMinimumSize(QSize(0, 30))  # Đặt kích thước tối thiểu cho frame
+        self.frame_cust_info.setMaximumSize(QSize(16777215, 30))  # Đặt kích thước tối đa cho frame
+        self.horizontalLayout_cust_info = QHBoxLayout(self.frame_cust_info)  # Sử dụng QHBoxLayout để sắp xếp các widget theo chiều ngang
+        self.horizontalLayout_cust_info.setObjectName("horizontalLayout_cust_info")
+        self.horizontalLayout_cust_info.setContentsMargins(0, 0, 0, 0)  # Đặt lề cho layout
+
+        # Tạo nhãn "Cust:"
+        self.label_cust = QLabel(self.frame_cust_info)
+        self.label_cust.setObjectName("label_cust")
+        self.label_cust.setText("Cust:")  # Đặt văn bản cho nhãn
+        self.horizontalLayout_cust_info.addWidget(self.label_cust)  # Thêm nhãn vào layout ngang
+        # Định dạng cho nhãn "Cust:"
+        self.label_cust.setStyleSheet(u"color: rgb(255, 255, 255);"
+                                       "font: bold 14px;"
+                                       "margin-right: 5px;")  # Màu đen, font đậm, kích thước 14px
+
+        # Tạo ô nhập thông tin
+        self.lineEdit_cust = QLineEdit(self.frame_cust_info)
+        self.lineEdit_cust.setObjectName("lineEdit_cust")
+        self.lineEdit_cust.setMinimumSize(80, 10)  # Thiết lập kích thước tối thiểu là 150x25
+        self.lineEdit_cust.setMaximumSize(80, 25)  # Thiết lập kích thước tối đa là 250x35
+        # Định dạng cho ô nhập thông tin
+        self.lineEdit_cust.setStyleSheet(u"QLineEdit {"
+                                         "border: 1px solid rgb(0, 0, 0);"  # Viền màu xanh
+                                         "border-radius: 7px;"  # Bo góc
+                                         "padding: 4px;"  # Khoảng cách padding bên trong
+                                         "background-color: rgb(255, 255, 255);"  # Màu nền trắng
+                                         "color: rgb(0, 0, 0);"  # Màu chữ đen
+                                         "font-size: 14px;"  # Kích thước font
+                                         "font:bold 14px"
+                                         "}")
+        
+        
+        self.horizontalLayout_cust_info.addWidget(self.lineEdit_cust)  # Thêm ô nhập vào layout ngang
+
+        self.verticalLayout_200.addWidget(self.frame_cust_info)  # Thêm frame chứa nhãn và ô nhập vào layout dọc của QFrame `Info_QF`
+
+        # Tạo một frame mới để chứa nhãn và ô nhập
+        self.frame_project_info = QFrame(self.Info_QF)
+        self.frame_project_info.setObjectName("frame_project_info")
+        self.frame_project_info.setMinimumSize(QSize(0, 30))  # Đặt kích thước tối thiểu cho frame
+        self.frame_project_info.setMaximumSize(QSize(16777215, 30))  # Đặt kích thước tối đa cho frame
+        self.horizontalLayout_project_info = QHBoxLayout(self.frame_project_info)  # Sử dụng QHBoxLayout để sắp xếp các widget theo chiều ngang
+        self.horizontalLayout_project_info.setObjectName("horizontalLayout_project_info")
+        self.horizontalLayout_project_info.setContentsMargins(0, 0, 0, 0)  # Đặt lề cho layout
+
+        # Tạo nhãn "project:"
+        self.label_project = QLabel(self.frame_project_info)
+        self.label_project.setObjectName("label_project")
+        self.label_project.setText("Project:")  # Đặt văn bản cho nhãn
+        self.horizontalLayout_project_info.addWidget(self.label_project)  # Thêm nhãn vào layout ngang
+        # Định dạng cho nhãn "project:"
+        
+        self.label_project.setStyleSheet(u"color: rgb(255, 255, 255);"
+                                       "font: bold 14px;"
+                                       "margin-right: 5px;")  # Màu đen, font đậm, kích thước 14px
+
+        # Tạo ô nhập thông tin
+        self.lineEdit_project = QLineEdit(self.frame_project_info)
+        self.lineEdit_project.setObjectName("lineEdit_project")
+        self.lineEdit_project.setMinimumSize(80, 10)  # Thiết lập kích thước tối thiểu là 150x25
+        self.lineEdit_project.setMaximumSize(80, 25)  # Thiết lập kích thước tối đa là 250x35
+        # Định dạng cho ô nhập thông tin
+        self.lineEdit_project.setStyleSheet(u"QLineEdit {"
+                                         "border: 1px solid rgb(0, 0, 0);"  # Viền màu xanh
+                                         "border-radius: 7px;"  # Bo góc
+                                         "padding: 4px;"  # Khoảng cách padding bên trong
+                                         "background-color: rgb(255, 255, 255);"  # Màu nền trắng
+                                         "color: rgb(0, 0, 0);"  # Màu chữ đen
+                                         "font-size: 14px;"  # Kích thước font
+                                         "font:bold 14px"
+                                         "}")
+        
+        
+        self.horizontalLayout_project_info.addWidget(self.lineEdit_project)  # Thêm ô nhập vào layout ngang
+
+        self.verticalLayout_200.addWidget(self.frame_project_info)  # Thêm frame chứa nhãn và ô nhập vào layout dọc của QFrame `Info_QF`
+
+  # Tạo một frame mới để chứa nhãn và ô nhập
+        self.frame_batchid_info = QFrame(self.Info_QF)
+        self.frame_batchid_info.setObjectName("frame_batchid_info")
+        self.frame_batchid_info.setMinimumSize(QSize(0, 30))  # Đặt kích thước tối thiểu cho frame
+        self.frame_batchid_info.setMaximumSize(QSize(16777215, 30))  # Đặt kích thước tối đa cho frame
+        self.horizontalLayout_batchid_info = QHBoxLayout(self.frame_batchid_info)  # Sử dụng QHBoxLayout để sắp xếp các widget theo chiều ngang
+        self.horizontalLayout_batchid_info.setObjectName("horizontalLayout_batchid_info")
+        self.horizontalLayout_batchid_info.setContentsMargins(0, 0, 0, 0)  # Đặt lề cho layout
+
+        # Tạo nhãn "batchid:"
+        self.label_batchid = QLabel(self.frame_batchid_info)
+        self.label_batchid.setObjectName("label_batchid")
+        self.label_batchid.setText("Batchid:")  # Đặt văn bản cho nhãn
+        self.horizontalLayout_batchid_info.addWidget(self.label_batchid)  # Thêm nhãn vào layout ngang
+        # Định dạng cho nhãn "batchid:"
+        self.label_batchid.setStyleSheet(u"color: rgb(255, 255, 255);"
+                                       "font: bold 14px;"
+                                       "margin-right: 5px;")  # Màu đen, font đậm, kích thước 14px
+
+        # Tạo ô nhập thông tin
+        self.lineEdit_batchid = QLineEdit(self.frame_batchid_info)
+        self.lineEdit_batchid.setObjectName("lineEdit_batchid")
+        self.lineEdit_batchid.setMinimumSize(80, 10)  # Thiết lập kích thước tối thiểu là 150x25
+        self.lineEdit_batchid.setMaximumSize(80, 25)  # Thiết lập kích thước tối đa là 250x35
+        # Định dạng cho ô nhập thông tin
+        self.lineEdit_batchid.setStyleSheet(u"QLineEdit {"
+                                         "border: 1px solid rgb(0, 0, 0);"  # Viền màu xanh
+                                         "border-radius: 7px;"  # Bo góc
+                                         "padding: 4px;"  # Khoảng cách padding bên trong
+                                         "background-color: rgb(255, 255, 255);"  # Màu nền trắng
+                                         "color: rgb(0, 0, 0);"  # Màu chữ đen
+                                         "font-size: 14px;"  # Kích thước font
+                                         "font:bold 14px"
+                                         "}")
+        
+        
+        self.horizontalLayout_batchid_info.addWidget(self.lineEdit_batchid)  # Thêm ô nhập vào layout ngang
+
+        self.verticalLayout_200.addWidget(self.frame_batchid_info)  # Thêm frame chứa nhãn và ô nhập vào layout dọc của QFrame `Info_QF`
+
+        self.verticalLayout_5.addWidget(self.Info_QF)
+
+
+#===========================================================================================================================================
         self.model_box = QComboBox(self.Model_QF_2)
         self.model_box.setObjectName(u"model_box")
         self.model_box.setMinimumSize(QSize(170, 20))
@@ -1116,7 +1286,7 @@ class Ui_MainWindow(object):
 "			color: rgba(0, 0, 0, 200);\n"
 "			font: 600 9pt \"Segoe UI\";\n"
 "            border: 1px solid lightgray;\n"
-"            border-radius: 10px;\n"
+"            border-radius: 5px;\n"
 "            padding-left: 15px;\n"
 "        }\n"
 "        \n"
@@ -1377,7 +1547,7 @@ class Ui_MainWindow(object):
         self.conf_spinbox.setMinimum(0.010000000000000)
         self.conf_spinbox.setMaximum(1.000000000000000)
         self.conf_spinbox.setSingleStep(0.050000000000000)
-        self.conf_spinbox.setValue(0.250000000000000)
+        self.conf_spinbox.setValue(0.500000000000000)
 
         self.horizontalLayout_11.addWidget(self.conf_spinbox)
 
@@ -1404,7 +1574,7 @@ class Ui_MainWindow(object):
 "}")
         self.conf_slider.setMinimum(1)
         self.conf_slider.setMaximum(100)
-        self.conf_slider.setValue(25)
+        self.conf_slider.setValue(50)
         self.conf_slider.setOrientation(Qt.Horizontal)
 
         self.horizontalLayout_11.addWidget(self.conf_slider)
@@ -1495,8 +1665,8 @@ class Ui_MainWindow(object):
 "QSpinBox::down-button:pressed {\n"
 "margin-bottom: 1px;\n"
 "}")
-        self.speed_spinbox.setMaximum(50)
-        self.speed_spinbox.setValue(10)
+        self.speed_spinbox.setMaximum(70)
+        self.speed_spinbox.setValue(40)
 
         self.horizontalLayout_12.addWidget(self.speed_spinbox)
 
@@ -1521,8 +1691,8 @@ class Ui_MainWindow(object):
 "background-color: qradialgradient(cx:0, cy:0, radius:1, fx:0.1, fy:0.1, stop:0 rgb(253, 139, 133),  stop:1 rgb(248, 194, 152));\n"
 "border-radius: 5px;\n"
 "}")
-        self.speed_slider.setMaximum(50)
-        self.speed_slider.setValue(10)
+        self.speed_slider.setMaximum(70)
+        self.speed_slider.setValue(40)
         self.speed_slider.setOrientation(Qt.Horizontal)
 
         self.horizontalLayout_12.addWidget(self.speed_slider)
@@ -1755,6 +1925,8 @@ class Ui_MainWindow(object):
         self.ToggleBotton_3.setText(QCoreApplication.translate("MainWindow", u"Conf", None))
         self.ToggleBotton_4.setText(QCoreApplication.translate("MainWindow", u"Delay(ms)", None))
         self.ToggleBotton_5.setText(QCoreApplication.translate("MainWindow", u"Options", None))
+        self.ToggleBotton_500.setText(QCoreApplication.translate("MainWindow", u"User", None))
+
         self.save_res_button.setText(QCoreApplication.translate("MainWindow", u"Save MP4/JPG", None))
         self.save_txt_button.setText(QCoreApplication.translate("MainWindow", u"Save Labels(.txt)", None))
         self.status_bar.setText(QCoreApplication.translate("MainWindow", u"Welcome!", None))
