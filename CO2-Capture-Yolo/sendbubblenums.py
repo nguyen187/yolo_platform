@@ -26,7 +26,7 @@ def send_temperature_data(producer, topic):
     
 
 if __name__ == "__main__":
-    bootstrap_servers = "localhost:9093"  # Kafka broker address
+    bootstrap_servers = "52.230.84.26:9093"  # Kafka broker address
     topic = "states"  # Kafka topic to send data
 
     # Create Kafka producer
