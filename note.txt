@@ -1,1 +1,10 @@
-qwewqewqewq
+#create env
+conda create -n yolov8_gui python==3.10
+# activate
+conda activate yolov8_gui
+#
+pip install -r requirements.txt
+# 
+python main.py
+# build docker compose
+sudo docker compose -f docker-compose-test2.yml --env-file conf/variables.env up --pull always
