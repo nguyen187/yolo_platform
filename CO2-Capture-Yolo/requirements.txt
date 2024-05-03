@@ -1,4 +1,4 @@
-lap==0.4.0
+#lap==0.4.0
 opencv-python==4.9.0.80
 PySide6==6.4.2
 ultralytics==8.0.48
