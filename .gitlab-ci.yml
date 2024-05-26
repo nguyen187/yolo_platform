@@ -1,0 +1,54 @@
+# Stages definition
+stages:
+  #- test
+  - build
+  - before_deployment
+  - deployment
+
+# Common settings for jobs
+.deploy_template:
+  image: ubuntu
+  only:
+    - tags
+    - /^v.*$/
+    - /^rc.*$/
+  stage: before_deployment
+  before_script:
+    - apt update && apt install openssh-client -y
+    - mkdir -p ~/.ssh/
+    - echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_rsa
+    - echo "$SSH_PUBLIC_KEY" >> ~/.ssh/id_rsa.pub
+    - ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
+    - VERSION=$(echo "$CI_COMMIT_REF_NAME" | sed 's/^v//')
+    - chmod 600 ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa.pub
+    - echo "$ENV_PRODUCTION" >> env-production
+
+# Jobs
+#unit-test:
+#  image: golang:1.20-alpine
+#  stage: test
+ # script:
+  #  - go test ./...
+
+#sast-check:
+  
+ # stage: test
+  #before_script:
+   # - go install github.com/securego/gosec/v2/cmd/gosec@latest
+  #script:
+   # - gosec ./...
+
+
+update_docker_compose:
+  extends: .deploy_template
+  script:
+    - sed -i "s/^TAG=.*$/TAG=$VERSION/" env-production
+    - scp env-production $SERVER_USER@$SERVER_HOST:/$SERVER_USER/production/.env
+    - scp -r $CI_PROJECT_DIR/deployment/production/ $SERVER_USER@$SERVER_HOST:/$SERVER_USER/
+
+deploy_api:
+  extends: .deploy_template
+  stage: deployment
+  script:
+    - ssh $SERVER_USER@$SERVER_HOST "cd production && docker compose up -d"
