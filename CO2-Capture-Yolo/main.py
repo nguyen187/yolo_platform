@@ -139,7 +139,6 @@ class YoloPredictor(BasePredictor, QObject):
                     self.vid_cap.release()
                     cv2.destroyAllWindows()
                     raise StopIteration
-
                     break
                 # Change the model midway
                 if self.used_model_name != self.new_model_name:  
@@ -221,6 +220,7 @@ class YoloPredictor(BasePredictor, QObject):
                         
                         # # # labels and nums dict
                         target_nums = 0
+                        liquidity_values = 'NA'
                         self.labels_dict = {}
                         if 'no detections' in label_str:
                             pass
@@ -591,7 +591,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if self.yolo_thread.isRunning():
                 self.yolo_thread.quit()         # end process
             self.pre_video.clear()           # clear image display  
-            self.res_video.clear()          
+            self.res_video.clear() 
+            self.yolo_predict.vid_cap.release()
+            cv2.destroyAllWindows()        
             self.Class_num.setText('--')
             self.Target_num.setText('--')
             self.fps_label.setText('--')
@@ -788,15 +790,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def stop(self):
         if self.yolo_thread.isRunning():
             self.yolo_thread.quit()         # end thread
+        self.yolo_predict.continue_dtc = False
+        
         self.yolo_predict.stop_dtc = True
         self.run_button.setChecked(False)    # start key recovery
         self.save_res_button.setEnabled(True)   # Ability to use the save button
         self.save_txt_button.setEnabled(True)   # Ability to use the save button
         self.pre_video.clear()           # clear image display
         self.res_video.clear()           # clear image display
-        # if self.yolo_predict.vid_cap is not None:
-        #     self.yolo_predict.vid_cap.release()
-            # cv2.destroyAllWindows()
+        if self.yolo_predict.vid_cap is not None:
+            self.yolo_predict.vid_cap.release()
+            cv2.destroyAllWindows()
         self.progress_bar.setValue(0)
         self.Class_num.setText('--')
         self.Target_num.setText('--')

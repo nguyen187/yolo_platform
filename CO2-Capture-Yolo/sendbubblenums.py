@@ -5,14 +5,13 @@ import json
 
 def send_temperature_data(producer, topic):
     while True:
-
         # Create JSON payload
         # payload = {"temperature": temperature}
-        f = open('./realtime/data.json')
+        f = open("./realtime/data.json")
 
         # Serialize payload to JSON
         s = json.load(f)
-        # data = {"liquidity":s['liquidity'],"bubble":s[bubble]}        
+        # data = {"liquidity":s['liquidity'],"bubble":s[bubble]}
         # data = json.dumps(data)
         # print(data)
 
@@ -21,12 +20,11 @@ def send_temperature_data(producer, topic):
         producer.send(topic, value=s.encode("utf-8"))
         producer.flush()
 
-
         time.sleep(5)  # Wait for 5 seconds
-    
+
 
 if __name__ == "__main__":
-    bootstrap_servers = "52.230.84.26:9093"  # Kafka broker address
+    bootstrap_servers = "159.65.138.162:9093"  # Kafka broker address
     topic = "states"  # Kafka topic to send data
 
     # Create Kafka producer
@@ -34,7 +32,7 @@ if __name__ == "__main__":
         bootstrap_servers=bootstrap_servers,
         # Use default serialization
         value_serializer=lambda v: v,
-        api_version=(2, 0, 2)
+        api_version=(2, 0, 2),
     )
 
     try:

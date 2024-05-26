@@ -247,10 +247,9 @@ class LoadWebcam:  # for inference
         self.mode = None
 
         print(f'Trying to open camera with index {self.pipe}')
-        self.cap = cv2.VideoCapture(self.pipe,cv2.CAP_DSHOW)  # video capture objectself.pipe
+        self.cap = cv2.VideoCapture(self.pipe)  # video capture objectself.pipe,cv2.CAP_DSHOW
         # print(cv2.getBuildInformation())
 
-        # assert self.cap.isOpened()
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 640)
 
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
@@ -294,18 +293,7 @@ class LoadWebcam:  # for inference
 
         return img_path, img, img0, self.cap
     
-    # def __next__(self):
-    #     self.count += 1
-    #     if cv2.waitKey(1) == ord('q'):  # q to quit
-    #         self.cap.release()
-    #         cv2.destroyAllWindows()
-    #         raise StopIteration
-
-    #     # Read frame
-    #     ret_val, img0 = self.cap.read()
-    #     if not ret_val:
-    #         raise ValueError(f'Cannot read frame from camera {self.pipe}')
-    #     img0 = cv2.flip(img0, 1)  # flip left-right
+  
 
     def __len__(self):
         return 0
