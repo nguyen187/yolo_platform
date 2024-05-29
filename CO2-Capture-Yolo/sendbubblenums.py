@@ -20,11 +20,12 @@ def send_temperature_data(producer, topic):
         producer.send(topic, value=s.encode("utf-8"))
         producer.flush()
 
-        time.sleep(5)  # Wait for 5 seconds
+        time.sleep(1)  # Wait for 5 seconds
 
 
 if __name__ == "__main__":
-    bootstrap_servers = "159.65.138.162:9093"  # Kafka broker address
+    #    bootstrap_servers = "159.65.138.162:9093"  # Kafka broker address
+    bootstrap_servers = "localhost:9093"
     topic = "states"  # Kafka topic to send data
 
     # Create Kafka producer

@@ -1,0 +1,53 @@
+show tag values from kafka_consumer with key=cust
+#cust
+import "influxdata/influxdb/v1"
+
+v1.tagValues(
+  bucket: "system_state2",
+  tag: "cust",
+  predicate: (r) => r._measurement == "kafka_consumer"
+)
+
+
+# project
+import "influxdata/influxdb/v1"
+
+v1.tagValues(
+  bucket: "system_state2",
+  tag: "projectid",
+  predicate: (r) => r._measurement == "kafka_consumer" and r.cust == "${Cust}"
+)
+#batch
+import "influxdata/influxdb/v1"
+
+v1.tagValues(
+  bucket: "system_state2",
+  tag: "batchid",
+  predicate: (r) => r._measurement == "kafka_consumer" and r.projectid == "${project}"
+)
+
+#query
+from(bucket: "system_state2")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r["_measurement"] == "kafka_consumer")
+  |> filter(fn: (r) => r["_field"] == "bubble_nums")
+  |> filter(fn: (r) => r["cust"] == "${Cust}")
+  |> filter(fn: (r) => r["projectid"] == "${project}")
+  |> filter(fn: (r) => r["batchid"] == "${batch}")
+
+
+  
+  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+  |> yield(name: "mean")
+
+#query2
+from(bucket: "system_state2")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r["_measurement"] == "kafka_consumer")
+  |> filter(fn: (r) => r["_field"] == "liquidity")
+  |> filter(fn: (r) => r["cust"] == "${Cust}" and r["projectid"] == "${project}" and r["batchid"] == "${batch}")
+
+  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+  |> yield(name: "mean")
+
+

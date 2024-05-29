@@ -7,7 +7,7 @@ def send_temperature_data(producer, topic):
     temperature = 25.0  # Initial temperature
     while True:
         # Generate temperature data
-        temperature += 0.5
+        temperature = "the restaurant is good"
 
         # Create JSON payload
         payload = {"temperature": temperature}
@@ -25,15 +25,15 @@ def send_temperature_data(producer, topic):
 
 
 if __name__ == "__main__":
-    bootstrap_servers = "localhost:9093"  # Kafka broker address
-    topic = "states"  # Kafka topic to send data
+    bootstrap_servers = "192.168.117.128:9092"  # Kafka broker address
+    topic = "myTopic"  # Kafka topic to send data
 
     # Create Kafka producer
     producer = KafkaProducer(
         bootstrap_servers=bootstrap_servers,
         # Use default serialization
         value_serializer=lambda v: v,
-        api_version=(2, 0, 2)
+        api_version=(2, 0, 2),
     )
 
     try:
