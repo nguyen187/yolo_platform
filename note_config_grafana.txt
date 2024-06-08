@@ -49,5 +49,5 @@ from(bucket: "system_state2")
 
   |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
   |> yield(name: "mean")
-
-
+# phan vien cho file 
+sudo chown -R 472:472 ./grafana
