@@ -249,15 +249,18 @@ class LoadWebcam:  # for inference
         print(f'Trying to open camera with index {self.pipe}')
         self.cap = cv2.VideoCapture(self.pipe)  # video capture objectself.pipe,cv2.CAP_DSHOW
         # print(cv2.getBuildInformation())
-
+        # fix cam
+        if not self.cap.isOpened():
+            raise ValueError(f'Cannot open camera with index {self.pipe}')
+        #fix cam
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 640)
 
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-
-
-        if not self.cap.isOpened():
-            raise ValueError(f'Cannot open camera with index {self.pipe}')
         self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)  # set buffer size
+
+
+        # if not self.cap.isOpened():
+        #     raise ValueError(f'Cannot open camera with index {self.pipe}')
   # video capture object
         # self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)  # set buffer size
         

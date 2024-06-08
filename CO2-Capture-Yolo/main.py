@@ -27,7 +27,7 @@ from utils.general import check_img_size, check_imshow, increment_path
 from utils.datasets import LoadImages, LoadWebcam
 
 
-map_liqui = {"low": 1, "medium": 2, "high": 3}
+map_liqui = {"no detection":-1,"low": 1, "medium": 2, "high": 3}
 
 
 class YoloPredictor(BasePredictor, QObject):
@@ -100,8 +100,8 @@ class YoloPredictor(BasePredictor, QObject):
 
             # set model
             self.yolo2main_status_msg.emit("Loading Model...")
-            print(self.new_model_name)
-            time.sleep(5)
+            # print(self.new_model_name)
+            # time.sleep(5)
             if not self.model:
                 self.setup_model(self.new_model_name)
                 self.used_model_name = self.new_model_name
@@ -259,7 +259,7 @@ class YoloPredictor(BasePredictor, QObject):
 
                         # # # labels and nums dict
                         target_nums = 0
-                        liquidity_values = "NA"
+                        liquidity_values = "no detection"
                         self.labels_dict = {}
                         if "no detections" in label_str:
                             pass
