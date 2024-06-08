@@ -1705,21 +1705,21 @@ class Ui_MainWindow(object):
 
         self.Save_QF = QFrame(self.prm_page)
         self.Save_QF.setObjectName(u"Save_QF")
-        self.Save_QF.setMinimumSize(QSize(190, 120))
-        self.Save_QF.setMaximumSize(QSize(190, 120))
+        self.Save_QF.setMinimumSize(QSize(190, 130))
+        self.Save_QF.setMaximumSize(QSize(190, 130))
         self.Save_QF.setStyleSheet(u"QFrame#Save_QF{\n"
 "border:2px solid rgba(255, 255, 255, 70);\n"
 "border-radius:15px;\n"
 "}")
         self.verticalLayout_20 = QVBoxLayout(self.Save_QF)
         self.verticalLayout_20.setObjectName(u"verticalLayout_20")
-        self.verticalLayout_20.setContentsMargins(9, 9, 9, 9)
+        self.verticalLayout_20.setContentsMargins(1, 1, 1, 1)
         self.ToggleBotton_5 = QPushButton(self.Save_QF)
         self.ToggleBotton_5.setObjectName(u"ToggleBotton_5")
         sizePolicy1.setHeightForWidth(self.ToggleBotton_5.sizePolicy().hasHeightForWidth())
         self.ToggleBotton_5.setSizePolicy(sizePolicy1)
-        self.ToggleBotton_5.setMinimumSize(QSize(0, 30))
-        self.ToggleBotton_5.setMaximumSize(QSize(16777215, 30))
+        self.ToggleBotton_5.setMinimumSize(QSize(0, 40))
+        self.ToggleBotton_5.setMaximumSize(QSize(16777215, 40))
         self.ToggleBotton_5.setFont(font5)
         self.ToggleBotton_5.setCursor(QCursor(Qt.ArrowCursor))
         self.ToggleBotton_5.setMouseTracking(True)
@@ -1745,6 +1745,38 @@ class Ui_MainWindow(object):
         self.ToggleBotton_5.setFlat(False)
 
         self.verticalLayout_20.addWidget(self.ToggleBotton_5)
+
+        # self.verticalLayout_21.addWidget(self.ToggleBotton_6)
+        self.stream_button = QCheckBox(self.Save_QF)
+        self.stream_button.setObjectName(u"stream_button")
+        self.stream_button.setCursor(QCursor(Qt.PointingHandCursor))
+        self.stream_button.setStyleSheet(u"QCheckBox {\n"
+"color: rgba(255, 255, 255, 199);\n"
+"font: 590 10pt \"Nirmala UI\";\n"
+"        }\n"
+"\n"
+"        QCheckBox::indicator {\n"
+"            padding-top: 1px;\n"
+"padding-left: 10px;\n"
+"            width: 40px;\n"
+"            height: 30px;\n"
+"            border: none;\n"
+"        }\n"
+"\n"
+"        QCheckBox::indicator:unchecked {\n"
+"            image: url(./img/check_no.png);\n"
+"        }\n"
+"\n"
+"        QCheckBox::indicator:checked {\n"
+"            image: url(./img/check_yes.png);\n"
+"        }")
+
+        self.verticalLayout_20.addWidget(self.stream_button)
+
+
+
+
+        
         self.visual_button = QCheckBox(self.Save_QF)
         self.visual_button.setObjectName(u"visual_button")
         self.visual_button.setCursor(QCursor(Qt.PointingHandCursor))
@@ -1770,6 +1802,9 @@ class Ui_MainWindow(object):
 "        }")
 
         self.verticalLayout_20.addWidget(self.visual_button)
+
+
+
 
         self.save_res_button = QCheckBox(self.Save_QF)
         self.save_res_button.setObjectName(u"save_res_button")
@@ -1894,6 +1929,8 @@ class Ui_MainWindow(object):
         self.src_cam_button.setText(QCoreApplication.translate("MainWindow", u"Camera", None))
         self.src_rtsp_button.setText(QCoreApplication.translate("MainWindow", u"Rtsp", None))
         self.visual_button.setText(QCoreApplication.translate("MainWindow", u"Visualize", None))
+        self.stream_button.setText(QCoreApplication.translate("MainWindow", u"Stream data", None))
+
 
         self.VersionLabel.setText(QCoreApplication.translate("MainWindow", u"Version: 1.0.2", None))
         self.explain_title.setText(QCoreApplication.translate("MainWindow", u"User Interface App", None))

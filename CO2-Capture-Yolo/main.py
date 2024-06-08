@@ -25,8 +25,23 @@ import cv2
 import os
 from utils.general import check_img_size, check_imshow, increment_path
 from utils.datasets import LoadImages, LoadWebcam
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from kafka import KafkaProducer
 
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
 
+plt.style.use("ggplot")
+
+# plt.style.use("dark_background")
+# plt.style.use("seaborn-dark")
+for param in ["text.color", "axes.labelcolor", "xtick.color", "ytick.color"]:
+    plt.rcParams[param] = "0.9"  # very light grey
+
+for param in ["figure.facecolor", "axes.facecolor", "savefig.facecolor"]:
+    plt.rcParams[param] = "#2E4F4F"  # bluish dark grey212946
+
+from datetime import datetime
 map_liqui = {"no detection":-1,"low": 1, "medium": 2, "high": 3}
 
 
@@ -40,6 +55,9 @@ class YoloPredictor(BasePredictor, QObject):
     yolo2main_liquidity = Signal(
         dict
     )  # Detected target results (number of each category)
+    yolo2main_stream = Signal(
+        dict
+    )
     yolo2main_progress = Signal(int)  # Completeness
     # yolo2main_velocity = Signal(int)        # Number of categories detected
     yolo2main_target_num = Signal(int)  # Targets detected
@@ -71,10 +89,11 @@ class YoloPredictor(BasePredictor, QObject):
         self.speed_thres = 10  # delay, ms
         self.labels_dict = {}  # return a dictionary of results
         self.progress_value = 0  # progress bar
-
+        self.stream = False
         self.cust = "NA"
         self.projectid = "NA"
         self.batchid = 0
+        self.flag =datetime.now() 
 
         # Usable if setup is done
         self.model = None
@@ -291,20 +310,23 @@ class YoloPredictor(BasePredictor, QObject):
                         self.yolo2main_liquidity.emit(liquidity_values)
                         self.yolo2main_target_num.emit(target_nums)
                         # send to event Hub
+                        
+                        now =  datetime.now() 
                         try:
                             reading = {
+                                "time":now,
                                 "cust": self.cust,
                                 "projectid": self.projectid,
                                 "batchid": self.batchid,
                                 "liquidity": map_liqui[liquidity_values],
                                 "bubble_nums": target_nums,
                             }
-
-                            s = json.dumps(
-                                reading
-                            )  # Convert the reading into a JSON string.
-                            with open("./realtime/data.json", "w") as f:
-                                json.dump(s, f)
+                            self.yolo2main_stream.emit(reading)
+                            # s = json.dumps(
+                            #     reading
+                            # )  # Convert the reading into a JSON string.
+                            # with open("./realtime/data.json", "w") as f:
+                            #     json.dump(s, f)
 
                         except KeyboardInterrupt:
                             # pass
@@ -462,21 +484,7 @@ class YoloPredictor(BasePredictor, QObject):
         return log_string
 
 
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import datetime
 
-from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
-
-plt.style.use("ggplot")
-
-# plt.style.use("dark_background")
-# plt.style.use("seaborn-dark")
-for param in ["text.color", "axes.labelcolor", "xtick.color", "ytick.color"]:
-    plt.rcParams[param] = "0.9"  # very light grey
-
-for param in ["figure.facecolor", "axes.facecolor", "savefig.facecolor"]:
-    plt.rcParams[param] = "#2E4F4F"  # bluish dark grey212946
 
 
 class MplCanvas(FigureCanvas):
@@ -505,7 +513,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # UIFuncitons.shadow_style(self, self.Target_QF, QColor(251, 157, 139))
         # UIFuncitons.shadow_style(self, self.Fps_QF, QColor(170, 128, 213))
         # UIFuncitons.shadow_style(self, self.Model_QF, QColor(64, 186, 193))
+        bootstrap_servers = "localhost:9093"
+        self.topic = "states"  # Kafka topic to send data
 
+        # Create Kafka producer
+        self.producer = KafkaProducer(
+            bootstrap_servers=bootstrap_servers,
+            # Use default serialization
+            value_serializer=lambda v: v,
+            api_version=(2, 0, 2),
+        )
         # read model folder
         self.pt_list = os.listdir("./models")
         self.pt_list = [file for file in self.pt_list if file.endswith(".pt")]
@@ -537,6 +554,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.yolo_predict.yolo2main_liquidity.connect(
             lambda x: self.Class_num.setText(str(x))
         )
+        
+
+        self.yolo_predict.yolo2main_stream.connect(
+                lambda x: self.stream_data(x)
+            )
 
         self.yolo_predict.yolo2main_target_num.connect(
             lambda x: self.Target_num.setText(str(x))
@@ -589,7 +611,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # start testing button
         self.run_button.clicked.connect(self.run_or_continue)  # pause/start
         self.stop_button.clicked.connect(self.stop)  # termination
-
+        # self.stream_button.toggled.connect(self.stream_data)
         # Other function buttons
         # self.save_res_button.toggled.connect(self.update_plot_bubble)  # save image option
 
@@ -608,7 +630,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.des.layout().addWidget(self.canvas2)
         n_data = 50
         # date = [datetime.datetime.now() + datetime.timedelta(hours=i) for i in range(n_data)]
-        self.xdata = [datetime.datetime.now()] * n_data
+        self.xdata = [datetime.now()] * n_data
         # self.xdata  = matplotlib.dates.date2num(date)
         self.ydata = [0 for i in range(n_data)]
         # self.ydata2= [0 for i in range(n_data)]
@@ -653,7 +675,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return msg
 
     # Control start/pause
-
+    
     def run_or_continue(self):
         if self.yolo_predict.source == "":
             self.show_status(
@@ -682,6 +704,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     False
                 )  # It is forbidden to check and save after starting the detection
                 self.save_res_button.setEnabled(False)
+                # self.stream_button.setEnabled(False)
 
                 self.yolo_predict.cust = self.lineEdit_cust.text()
                 self.yolo_predict.projectid = self.lineEdit_project.text()
@@ -704,6 +727,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if msg == "Detection completed":
             self.save_res_button.setEnabled(True)
             self.save_txt_button.setEnabled(True)
+            self.stream_button.setEnabled(True)
             self.run_button.setChecked(False)
             self.progress_bar.setValue(0)
             if self.yolo_thread.isRunning():
@@ -711,6 +735,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         elif msg == "Detection terminated!":
             self.save_res_button.setEnabled(True)
             self.save_txt_button.setEnabled(True)
+            # self.stream_button.setEnabled(True)
             self.run_button.setChecked(False)
             self.progress_bar.setValue(0)
             if self.yolo_thread.isRunning():
@@ -726,7 +751,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def update_plot_bubble(self, msg1):
         if self.visual_button.isChecked():
             # Drop off the first y element, append a new one.
-            self.xdata = self.xdata[1:] + [datetime.datetime.now()]
+            self.xdata = self.xdata[1:] + [datetime.now()]
 
             self.ydata = self.ydata[1:] + [msg1]
 
@@ -756,7 +781,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         except Exception as e:
             print(repr(e))
+    
+    def stream_data(self,msg):
+        if self.stream_button.isChecked():
+            # try:
+                self.yolo_predict.stream = True
+                
+                time_difference = (msg["time"]-self.yolo_predict.flag).total_seconds()
+               
 
+
+
+                if abs(time_difference)>5:
+                    self.yolo_predict.flag =  datetime.now()
+                    msg["time"]=msg["time"].strftime("%m/%d/%Y, %H:%M:%S")
+                    print(msg)
+                    self.producer.send(self.topic, value=str(msg).encode("utf-8"))
+                    self.producer.flush()
+                else:
+                    pass
+
+            
+
+            # except Exception as e:
+                # self.show_status("%s" % e)
+                # pass
+           
     # else:
     #     if hasattr(self, 'timer') and self.timer.isActive():
     #         self.timer.stop()
@@ -940,6 +990,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.run_button.setChecked(False)  # start key recovery
         self.save_res_button.setEnabled(True)  # Ability to use the save button
         self.save_txt_button.setEnabled(True)  # Ability to use the save button
+        # self.stream_button.setEnabled(True)  # Ability to use the save button
+
         self.pre_video.clear()  # clear image display
         self.res_video.clear()  # clear image display
         if self.yolo_predict.vid_cap is not None:
@@ -1029,6 +1081,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # Exit Exit thread, save settings
     def closeEvent(self, event):
+
         config_file = "config/setting.json"
         config = dict()
         config["iou"] = self.iou_spinbox.value()
@@ -1043,10 +1096,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         config_json = json.dumps(config, ensure_ascii=False, indent=2)
         with open(config_file, "w", encoding="utf-8") as f:
             f.write(config_json)
+        self.producer.close()
+        
         # Exit the process before closing
         if self.yolo_thread.isRunning():
             self.yolo_predict.stop_dtc = True
             self.yolo_thread.quit()
+            self.producer.close()
+
             MessageBox(
                 self.close_button,
                 title="Note",
